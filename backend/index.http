@@ -1,0 +1,36 @@
+### post request
+
+POST  http://localhost:5001/register/
+Content-Type: application/json
+
+{
+  "username": "Pon",
+  "password": "123456"
+}
+
+###
+POST  http://localhost:5001/login/
+Content-Type: application/json
+
+{
+  "username": "Pon",
+  "password": "123456"
+}
+###
+
+GET http://localhost:5001/user/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlBvbiIsImlhdCI6MTcxMjQ4MDQwMn0.xXr1FGXkQugr2OpAKNlNqSXfOIFyrca5gZQ7dQ_7EOU
+
+
+###
+GET  http://localhost:5001/admin-login/
+Content-Type: application/json
+{
+  "adminname": "nato",
+  "password": "1234567890"
+}
+
+
+
+

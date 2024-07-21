@@ -1,0 +1,25 @@
+.images {
+    height: 300px;
+    border: 2px solid #fff;
+  }
+  
+  .scrolling-images {
+    min-height: 100vh;
+    overflow: hidden;
+  }
+  
+  .scrolling-images ul {
+    display: flex;
+    animation: slide 30s linear infinite; /* Adjust duration as needed */
+  }
+  
+  @keyframes slide {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(-100%);
+    }
+  }
+  
+  
