@@ -102,7 +102,7 @@ function UserRegisterForm() {
 <div className='bg-slate-900 max-h-screen p-7 flex justify-center'>
       <div className='flex flex-row'>
         <div>
-          <img className="h-full w-96"src="./Assests/fzv.jpeg" alt="iii"/>
+          <img className="h-full w-96" src="/assets/fzv.jpeg" alt="iii"/>
         </div>
       <div className=" flex w-96 flex-1 flex-col justify-center  py-12 lg:px-8 ">
         

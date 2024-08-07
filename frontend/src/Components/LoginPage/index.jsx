@@ -89,7 +89,7 @@ function UserLoginForm() {
       <div className='bg-slate-900  max-h-screen p-7 flex justify-center '>    
       <div className=' flex flex-row border-4 bg-slate-900 border-none'>
         <div>
-          <img className="h-full w-96"src="./Assests/Bluetiger.jpeg" alt="iii"/>
+          <img className="h-full w-96" src="/assets/Bluetiger.jpeg"  alt="Blue TIGER"/>
         </div>
       <div className=" flex w-96 flex-1 flex-col justify-center  py-12 lg:px-8 ">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
