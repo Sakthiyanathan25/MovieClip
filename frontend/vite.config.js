@@ -8,7 +8,9 @@ export default defineConfig({
   plugins: [react()
     ,
     envCompatible(),
-    outDir: 'build',
-  ],
+    
+  ],build: {
+    outDir: 'build', // Ensure this matches your deployment configuration
+  }
   
 })
