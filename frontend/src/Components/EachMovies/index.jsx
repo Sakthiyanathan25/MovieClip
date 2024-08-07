@@ -36,9 +36,9 @@ class EachMovies extends Component{
    
     fetchData = async () => {
         const {id}=this.props.match.params
-       
+        const apiUrl = import.meta.env.VITE_API_URL; 
         try {
-          const url = `http://localhost:5001/user/movies/${id}`;
+          const url = `${apiUrl}user/movies/${id}`;
           const jwtToken = Cookies.get('jwt_Token');
           const options = {
             method: "GET",
@@ -109,7 +109,8 @@ class EachMovies extends Component{
         const {movieId}=this.state.movieDetails
         try {
           const jwtToken = Cookies.get("jwt_Token");
-          const url = `http://localhost:5001/user/movies/${movieId}/likes`;
+          const apiUrl = import.meta.env.VITE_API_URL; 
+          const url = `${apiUrl}user/movies/${movieId}/likes`;
           const options = {
             method: "POST",
             headers: {
@@ -140,7 +141,8 @@ class EachMovies extends Component{
         const {movieId}=this.state.movieDetails
         try {
           const jwtToken = Cookies.get("jwt_Token");
-          const url = `http://localhost:5001/user/movies/${movieId}/watchlist`;
+          const apiUrl = import.meta.env.VITE_API_URL; 
+          const url = `${apiUrl}user/movies/${movieId}/watchlist`;
           const options = {
             method: "POST",
             headers: {

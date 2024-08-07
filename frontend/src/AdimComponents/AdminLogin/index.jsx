@@ -9,6 +9,7 @@ function AdminLoginForm() {
   const [adminname, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isError, setIsError] = useState(false);
+  const [LoginLoading,setLoginLoading]=useState(false)
   const history = useHistory();
 
 
@@ -23,9 +24,11 @@ function AdminLoginForm() {
   
   const onSubmitLogin = async (e) => {
     e.preventDefault();
+    setLoginLoading(true)
 
     const userDetails = { adminname, password };
-    const url = "http://localhost:5001/admin/login/";
+    const apiUrl = import.meta.env.VITE_API_URL; 
+    const url = `${apiUrl}admin/login/`;
     const options = {
       method: "POST",
       headers: {
@@ -34,18 +37,43 @@ function AdminLoginForm() {
       body: JSON.stringify(userDetails)
     };
 
-    const response = await fetch(url, options);
-    const data = await response.json();
+    try {
+      const response = await fetch(url, options);
+      const data = await response.json();
 
       if (response.ok) {
         Cookies.set('jwt_Admin_Token', data.jwtToken, { expires: 30 });
-        console.log(data.jwtToken)
-        setIsError(false);        
-        history.replace("/admin-site");
+        console.log(data.jwtToken);
+        setIsError(false);
+         toast.success("Login Successfully", {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+         setTimeout(() => history.replace("/admin-site"), 3000);
       } else {
-        
         setIsError(true);
-        toast.error(data.errMsg, { position: "bottom-right",
+         toast.error(data.errMsg, {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+      }
+    } catch (error) {
+      console.error('Network error:', error);
+      setIsError(true);
+       toast.error("Network error. Please try again later.", {
+        position: "bottom-right",
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -53,10 +81,10 @@ function AdminLoginForm() {
         draggable: true,
         progress: undefined,
         theme: "dark",
-        });
-        return;
-      }
-    
+      });
+    } finally {
+      setLoginLoading(false);
+    }
   };
   
   return (
@@ -106,8 +134,9 @@ function AdminLoginForm() {
             <div>
               <button
                 type="submit"
+                disabled={LoginLoading}
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                Sign in
+                {LoginLoading ? "Loading..." :"Sign in "}
               </button>
             </div>
           </form>

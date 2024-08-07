@@ -18,7 +18,8 @@ function Popular() {
   }, []);
 
   const fetchData = async () => {
-    const url = 'http://localhost:5001/user/';
+    const apiUrl = import.meta.env.VITE_API_URL; 
+    const url = `${apiUrl}user/`;
     const jwtToken = Cookies.get('jwt_Token');
     const options = {
       method: 'GET',

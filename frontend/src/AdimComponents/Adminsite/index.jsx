@@ -22,7 +22,8 @@ class AdminSite extends Component {
   }
   fetchData = async () => {
     const { searchInput } = this.state;
-    const url = `http://localhost:5001/admin/allmovies?search_q=${searchInput}`;
+    const apiUrl = import.meta.env.VITE_API_URL; 
+    const url = `${apiUrl}admin/allmovies?search_q=${searchInput}`;
     const jwtToken = Cookies.get('jwt_Admin_Token');
     const options = {
       method: "GET",
@@ -49,7 +50,9 @@ class AdminSite extends Component {
   };
 
   deleteMovie = async (id) => {
-    const url = `http://localhost:5001/admin/delete/${id} `;
+    const apiUrl = import.meta.env.VITE_API_URL; 
+
+    const url = `${apiUrl}admin/delete/${id} `;
     const jwtToken = Cookies.get('jwt_Admin_Token');
     const options = {
       method: "DELETE",
@@ -89,8 +92,7 @@ class AdminSite extends Component {
             <div className="bg-green-300 w-52 py-10 rounded-lg">
               <h1 className=" font-time py-2 text-xl ">TOTAL USERS</h1>
               <p className=" text-2xl font-time text-green-700 ">{this.state.totalusers}</p>
-
-              
+               
             </div>
             <div className="bg-red-300 w-52 py-10 rounded-lg">
               <h1 className=" font-time py-2 text-xl">ADMIN</h1>

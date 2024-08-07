@@ -9,6 +9,8 @@ function UserRegisterForm() {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [isError, setIsError] = useState(false);
+    const [RegisterLoading,setRegistorLoading]=useState(false)
+
     const history = useHistory();
 
     const onChangeRegisterUserName = (e) => {
@@ -25,6 +27,7 @@ function UserRegisterForm() {
 
     const onSubmitRegister = async (e) => {
         e.preventDefault();
+        setRegistorLoading(true)
 
         if (password !== confirmPassword) {
             setIsError(true);
@@ -37,11 +40,13 @@ function UserRegisterForm() {
             progress: undefined,
             theme: "dark",
             });
+            setRegistorLoading(false)
             return;
         }
 
         const userDetails = { username, password };
-        const url = "http://localhost:5001/user/register/";
+        const apiUrl = import.meta.env.VITE_API_URL; 
+        const url = `${apiUrl}user/register/`;
         const options = {
             method: "POST",
             headers: {
@@ -88,6 +93,8 @@ function UserRegisterForm() {
             progress: undefined,
             theme: "dark",
            });
+        } finally{
+          setRegistorLoading(false)
         }
     };
         return(
@@ -165,9 +172,10 @@ function UserRegisterForm() {
             <div>
               <button
                 type="submit"
+                disabled={RegisterLoading}
                 className="flex w-full justify-center rounded-md bg-red-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white  hover:bg-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
               >
-                Register
+                {RegisterLoading ? "Loading..." :"Register"}
               </button>
             </div>
           </form>

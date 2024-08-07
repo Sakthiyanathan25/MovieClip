@@ -9,6 +9,7 @@ function AdminRegister() {
     const [adminname, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const  [RegisterLoading,setRegistorLoading]=useState(false)
     const history = useHistory();
 
     const onChangeRegisterUserName = (e) => {
@@ -25,7 +26,7 @@ function AdminRegister() {
 
     const onSubmitRegister = async (e) => {
         e.preventDefault();
-    
+        setRegistorLoading(true)
         if (password !== confirmPassword) {
             toast.error("Passwords do not match", {
                 position: "bottom-right",
@@ -37,12 +38,14 @@ function AdminRegister() {
                 progress: undefined,
                 theme: "dark",
             });
+            setRegistorLoading(false)
             return;
         }
     
         const userDetails = { adminname, password };
         const jwtToken = Cookies.get('jwt_Admin_Token');
-        const url = "http://localhost:5001/admin/register/";
+        const apiUrl = import.meta.env.VITE_API_URL; 
+        const url = `${apiUrl}admin/register/`;
         const options = {
             method: "POST",
             headers: {
@@ -62,7 +65,7 @@ function AdminRegister() {
             console.log('Response data:', data); // Log response data
     
             if (response.ok) {
-                toast.success("Account created successfully", {
+                 toast.success("Account created successfully", {
                     position: "bottom-right",
                     autoClose: 5000,
                     hideProgressBar: false,
@@ -72,7 +75,7 @@ function AdminRegister() {
                     progress: undefined,
                     theme: "dark",
                 });
-                history.replace("/admin-login");
+                setTimeout(() => history.replace("/admin-site"), 2000);
             } else {
                 toast.error(data.errMsg || "An error occurred", {
                     position: "bottom-right",
@@ -97,6 +100,8 @@ function AdminRegister() {
                 progress: undefined,
                 theme: "dark",
             });
+        }finally {
+          setRegistorLoading(false);
         }
     };
     
@@ -176,9 +181,10 @@ Go Back
             <div>
               <button
                 type="submit"
+                disabled={RegisterLoading}
                 className="flex w-full justify-center rounded-md bg-red-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white  hover:bg-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
               >
-                Register
+                {RegisterLoading ? "Loading..." :"Register"}
               </button>
             </div>
           </form>

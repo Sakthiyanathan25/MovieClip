@@ -33,7 +33,8 @@ const Search=()=>{
       [searchValue])
       
       const getSearch=async()=>{
-        const url=`http://localhost:5001/user/search?search_q=${searchValue}`
+        const apiUrl = import.meta.env.VITE_API_URL; 
+        const url=`${apiUrl}user/search?search_q=${searchValue}`
         const jwtToken = Cookies.get('jwt_Token')
         const option={ method: "GET",
         headers: {
@@ -71,7 +72,7 @@ const Search=()=>{
         <FaSearch size={40} className="text-black my-auto"/>
       </div>
       <div>
-  <ul className="flex  flex-wrap  gap-5 mx-5 ">
+  <ul className="flex justify-center flex-wrap  gap-5 mx-5 ">
     {SearchMovies.length >0 ? SearchMovies.map(eachMovie => (
       <li className="" key={eachMovie.movieId}>
         {' '}

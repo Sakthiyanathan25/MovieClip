@@ -12,7 +12,8 @@ function Profile() {
     fetchData();
   }, []);
   const fetchData = async () => {
-    const url = "http://localhost:5001/user/userDetails";
+    const apiUrl = import.meta.env.VITE_API_URL; 
+    const url = `${apiUrl}user/userDetails`;
     const jwtToken = Cookies.get('jwt_Token');
     const options = { 
       method: "GET",

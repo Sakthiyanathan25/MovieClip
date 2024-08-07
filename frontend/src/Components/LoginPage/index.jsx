@@ -10,8 +10,9 @@ function UserLoginForm() {
   const [password, setPassword] = useState('');
   const [isError, setIsError] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [LoginLoading,setLoginLoading]=useState(false)
   const history=useHistory();
-
+  
   const onChangeUserName = (e) => {
     setUsername(e.target.value);
   };
@@ -22,9 +23,10 @@ function UserLoginForm() {
 
   const onSubmitLogin = async (e) => {
     e.preventDefault();
-
+    setLoginLoading(true)
     const userDetails = { username, password };
-    const url = "http://localhost:5001/user/login/";
+    const apiUrl = import.meta.env.VITE_API_URL; 
+    const url = `${apiUrl}user/login/`;
     const options = {
       method: "POST",
       headers: {
@@ -32,17 +34,43 @@ function UserLoginForm() {
       },
       body: JSON.stringify(userDetails)
     };
+    try {
       const response = await fetch(url, options);
       const data = await response.json();
 
       if (response.ok) {
         Cookies.set('jwt_Token', data.jwtToken, { expires: 30 });
+        console.log(data.jwtToken);
         setIsError(false);
-        history.replace("/");
+         toast.success("Login Successfully", {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+           setTimeout(() => history.replace("/"), 2000);
       } else {
-        setErrorMsg(data.errMsg);
         setIsError(true);
-        toast.error(errorMsg, { position: "bottom-right",
+         toast.error(data.errMsg, {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+      }
+    } catch (error) {
+      console.error('Network error:', error);
+      setIsError(true);
+       toast.error("Network error. Please try again later.", {
+        position: "bottom-right",
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -50,12 +78,12 @@ function UserLoginForm() {
         draggable: true,
         progress: undefined,
         theme: "dark",
-        
-        });
-      }
+      });
+    } finally {
+      setLoginLoading(false);
+    }
   };
-
-
+      
   return (
     <>
       <div className='bg-slate-900  max-h-screen p-7 flex justify-center '>    
@@ -108,9 +136,10 @@ function UserLoginForm() {
             <div>
               <button
                 type="submit"
+                disabled={LoginLoading}
                 className="flex w-full justify-center rounded-md bg-red-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white  hover:bg-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
               >
-                  Sign in
+                  {LoginLoading ? "Loading..." :"Sign in "}
               </button>
             </div>
           </form>

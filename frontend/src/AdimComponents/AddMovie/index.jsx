@@ -4,12 +4,14 @@ import { IoCloseCircleOutline } from "react-icons/io5";
 import Preview from "../Preview";
 import Cookies from 'js-cookie';
 
+
 import axios  from "axios"
 
 
 
 const AddMovie = () => {
   const  [AllMovies,setAllMovies]=useState(null)
+  const  [movieUpdateLoading,setmovieUpdateLoading]=useState(false)
   // Movie details
   const [movieImage, setMovieImage] = useState("");
   const [movieImageUrl,setmovieImageUrl]=useState("");
@@ -92,8 +94,8 @@ const AddMovie = () => {
   }, []);
 
   const fetchData = async () => {
-    
-    const url = `http://localhost:5001/admin/allmovies`;
+    const apiUrl = import.meta.env.VITE_API_URL; 
+    const url = `${apiUrl}admin/allmovies`;
     const jwtToken = Cookies.get('jwt_Admin_Token');
     const options = {
       method: "GET",
@@ -320,7 +322,7 @@ const AddMovie = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setmovieUpdateLoading(true)
     // Ensure all required data are present
     if (!movieName || !movieImage || !movieTrailer || !posterUrl || !certificate || !releaseDate || !runtime || !imdbRating || !description || !stars || !directorDetails || !musicDirectorDetails || !writerDetails || !genre || !languageDetails || !OTTplatform || !relatedVideo) {
       console.log(!movieName , !movieImage , !movieTrailer , !posterUrl , !certificate , !releaseDate , !runtime , !imdbRating , !description , !stars , !directorDetails , !musicDirectorDetails , !writerDetails , !genre , !languageDetails , !OTTplatform , !relatedVideo) 
@@ -391,8 +393,9 @@ const AddMovie = () => {
         alert('Movie Already present Try Another Movie !!!');
             return;
        }
+       const apiUrl = import.meta.env.VITE_API_URL; 
 
-        const response = await axios.post('http://localhost:5001/admin/upload', formData, {
+        const response = await axios.post(`${apiUrl}admin/upload`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'Authorization': `Bearer ${jwtToken}`,
@@ -404,6 +407,8 @@ const AddMovie = () => {
     } catch (error) {
         console.error('Error uploading the movie:', error);
         alert('An error occurred while uploading the movie. Please try again.');
+    } finally{
+      setmovieUpdateLoading(false)
     }
 };
 
@@ -901,7 +906,9 @@ const AddMovie = () => {
 
         </div>
         <div>
-          <button className="bg-sky-400 p-3" type="submit"> Verify And Submit</button>
+          <button className="bg-sky-400 p-3" type="submit" disabled={movieUpdateLoading}> {movieUpdateLoading ? "Uploading" :"Verify And Submit"}
+
+          </button>
         </div>
       </form>
 
