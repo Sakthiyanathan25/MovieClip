@@ -9,8 +9,6 @@ export default defineConfig({
     ,
     envCompatible(),
     
-  ],build: {
-    outDir: 'build', // Ensure this matches your deployment configuration
-  }
+  ]
   
 })
