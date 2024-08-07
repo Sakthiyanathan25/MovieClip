@@ -147,7 +147,7 @@ class Preview extends Component {
                             <div className='mx-10 gap-2 flex py-6'>
                                 <h1 className='text-sm text-white px-3 font-time bg-lime-400 inline-block'>Writers</h1>
                                 <p className='text-sm text-white px-3 font-time'>
-                                    {this.props.writer.map(each => each.writer).join(" , ")}
+                                    {this.props.writer.map(each => each.name).join(" , ")}
                                 </p>
                             </div>
                             <div className='mx-10 py-6'>

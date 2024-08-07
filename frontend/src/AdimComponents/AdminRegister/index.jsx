@@ -42,7 +42,7 @@ function AdminRegister() {
     
         const userDetails = { adminname, password };
         const jwtToken = Cookies.get('jwt_Admin_Token');
-        const url = "http://localhost:5001/admin-register/";
+        const url = "http://localhost:5001/admin/register/";
         const options = {
             method: "POST",
             headers: {

@@ -25,7 +25,7 @@ function AdminLoginForm() {
     e.preventDefault();
 
     const userDetails = { adminname, password };
-    const url = "http://localhost:5001/admin-login/";
+    const url = "http://localhost:5001/admin/login/";
     const options = {
       method: "POST",
       headers: {

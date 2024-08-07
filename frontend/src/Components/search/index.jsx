@@ -33,7 +33,7 @@ const Search=()=>{
       [searchValue])
       
       const getSearch=async()=>{
-        const url=`http://localhost:5001/search?search_q=${searchValue}`
+        const url=`http://localhost:5001/user/search?search_q=${searchValue}`
         const jwtToken = Cookies.get('jwt_Token')
         const option={ method: "GET",
         headers: {
@@ -75,7 +75,7 @@ const Search=()=>{
     {SearchMovies.length >0 ? SearchMovies.map(eachMovie => (
       <li className="" key={eachMovie.movieId}>
         {' '}
-        <Link to={`/movies/${eachMovie.movieId}`} key={eachMovie.movieId}>
+        <Link to={`movies/${eachMovie.movieId}`} key={eachMovie.movieId}>
           <div className="animate-slidein300 opacity-0">
             <img
               className="images"

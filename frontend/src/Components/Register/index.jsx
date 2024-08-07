@@ -41,7 +41,7 @@ function UserRegisterForm() {
         }
 
         const userDetails = { username, password };
-        const url = "http://localhost:5001/register/";
+        const url = "http://localhost:5001/user/register/";
         const options = {
             method: "POST",
             headers: {

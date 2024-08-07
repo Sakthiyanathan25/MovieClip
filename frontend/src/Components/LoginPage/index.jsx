@@ -24,7 +24,7 @@ function UserLoginForm() {
     e.preventDefault();
 
     const userDetails = { username, password };
-    const url = "http://localhost:5001/login/";
+    const url = "http://localhost:5001/user/login/";
     const options = {
       method: "POST",
       headers: {

@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState,useEffect, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import Preview from "../Preview";
@@ -6,7 +6,10 @@ import Cookies from 'js-cookie';
 
 import axios  from "axios"
 
+
+
 const AddMovie = () => {
+  const  [AllMovies,setAllMovies]=useState(null)
   // Movie details
   const [movieImage, setMovieImage] = useState("");
   const [movieImageUrl,setmovieImageUrl]=useState("");
@@ -20,6 +23,7 @@ const AddMovie = () => {
   const [posterUrl, setPosterUrl] = useState("");
   const [moviePosterUrl,setmoviePosterUrl]=useState("");
   const [certificate, setCertificate] = useState("");
+  const [category,setCategory]=useState("")
 
   // Director details
   const [directorImage, setDirectorImage] = useState("");
@@ -28,12 +32,12 @@ const AddMovie = () => {
   const [directorDetails, setDirectorDetails] = useState([]);
   const [directorImageArray,setDirectorImageArray]=useState([]);
 
-
   // Music director details
   const [musicDirectorName, setMusicDirectorName] = useState("");
   const [musicDirectorImage, setMusicDirectorImage] = useState("");
   const [musicDirectorImageUrl,setMusicDirectorImageUrl]=useState("");
   const [musicDirectorDetails, setMusicDirectorDetails] = useState([]);
+  const [musicdirectorImageArray,setMusicDirectorImageArray]=useState([]);
 
     // Writer details
     const [writerName, setwriterName] = useState("");
@@ -53,12 +57,17 @@ const AddMovie = () => {
   const [starImage, setStarImage] = useState("");
   const [starImageUrl,setStarImageUrl]=useState("");
   const [stars, setStars] = useState([]);
+  const [StarImageArray,setStarImageArray]=useState([]);
+
 
   //OTT-platform
    const [OTTplatformName, setOTTplatformName] = useState("");
    const [OTTplatformImage, setOTTplatformImage] = useState("");
    const [OTTplatformImageUrl,setOTTplatformImageUrl]=useState("");
    const [OTTplatformMovieUrl, setOTTplatformMovieUrl] = useState("");
+   const [OTTPlatformImageArray,setOttplatformImageArray]=useState([]);
+
+
    
    const [OTTplatform, setOTTplatform] = useState([]);
 
@@ -69,8 +78,45 @@ const AddMovie = () => {
   const  [videoThumbnail,setVideoThumbnail]=useState("")
   const [VideoThumbnailUrl,setVideoThumbnailUrl]=useState("");
   const  [relatedVideo,setrelatedVideo]=useState([])
+  const [videoArray,setvideoArray]=useState([]);
+  const [ThumbnailArray,setThumbnailArray]=useState([]);
+
   
 
+  useEffect(() => {
+      // Get today's date in YYYY-MM-DD format
+      const today = new Date().toISOString().split('T')[0];
+      setReleaseDate(today);
+      fetchData()
+
+  }, []);
+
+  const fetchData = async () => {
+    
+    const url = `http://localhost:5001/admin/allmovies`;
+    const jwtToken = Cookies.get('jwt_Admin_Token');
+    const options = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    }; 
+
+    const response = await fetch(url, options);
+    const data = await response.json();
+    if (response.ok) {
+      const updatedMovies = data.AllMovies.map((eachMovie) => ({
+        movieId: eachMovie.movie_id,
+        
+        name: eachMovie.name,
+      }));
+      console.log(updatedMovies)
+      setAllMovies(updatedMovies)
+    } else {
+      console.error(data.errMsg);
+    }
+  };
 
   // File input refs
   const directorImageRef = useRef(null);
@@ -81,6 +127,7 @@ const AddMovie = () => {
   const VideoRef=useRef(null)
 
   const handleCertificateChange = (e) => setCertificate(e.target.value);
+  const handleCategoryChange = (e) => setCategory(e.target.value);
 
   const handleAddDirector = (e) => {
     e.preventDefault();
@@ -92,6 +139,8 @@ const AddMovie = () => {
       image: directorImage,
       imageUrl:directorImageUrl
     };
+
+    setDirectorImageArray((prev)=>[...prev,directorImage])
 
     setDirectorDetails((prev) => [...prev, newDirector]);
     setDirectorName("");
@@ -110,6 +159,8 @@ const AddMovie = () => {
       image: musicDirectorImage,
       imageUrl:musicDirectorImageUrl
     };
+    setMusicDirectorImageArray((prev)=>[...prev,musicDirectorImage])
+
 
     setMusicDirectorDetails((prev) => [...prev, newMusicDirector]);
     setMusicDirectorName("");
@@ -128,6 +179,9 @@ const AddMovie = () => {
       image: starImage,
       imageUrl:starImageUrl
     };
+
+    setStarImageArray((prev)=>[...prev,starImage])
+
     console.log(starImage)
     setStars((prev) => [...prev, newStar]);
     setStarName("");
@@ -155,7 +209,7 @@ const AddMovie = () => {
 
     const newWriter = {
       id: uuidv4(),
-      writer: writerName,
+      name: writerName,
     };
 
     setwriterDetails((prev) => [...prev, newWriter]);
@@ -194,16 +248,16 @@ const AddMovie = () => {
     e.preventDefault();
     if (!OTTplatformImage || !OTTplatformName || !OTTplatformMovieUrl) return;
 
-    const newDirector = {
+    const newOTTplatform = {
       id: uuidv4(),
       name: OTTplatformName,
       image:OTTplatformImage,
       imageUrl:OTTplatformImageUrl,
       link:OTTplatformMovieUrl,
-
     };
+    setOttplatformImageArray((prev)=>[...prev,OTTplatformImage])
 
-    setOTTplatform((prev) => [...prev, newDirector]);
+    setOTTplatform((prev) => [...prev, newOTTplatform]);
     setOTTplatformName("");
     setOTTplatformImage("");
     setOTTplatformMovieUrl("")
@@ -223,6 +277,11 @@ const AddMovie = () => {
       videoUrl:videoUrl
     };
 
+    setvideoArray((prev)=>[...prev,video])
+
+    setThumbnailArray((prev)=>[...prev,videoThumbnail])
+
+
     setrelatedVideo((prev) => [...prev, newVideo]);
     setVideoTitle("");
     setVideoThumbnail("");
@@ -234,15 +293,30 @@ const AddMovie = () => {
   };
 
   const handleToUrl=(setFunction,setUrlFunction,input)=>{
-
     setFunction(input)
     setUrlFunction(URL.createObjectURL(input))
-    
   }
+ 
 
-  const handleRemoveItem = (setFunction, id) => {
+
+  const handleRemoveItem1 = (setFunction, id) => {
+
     setFunction((prev) => prev.filter((item) => item.id !== id));
   };
+
+  const handleRemoveItem2 = (function1,setFunction1,setFunction2, id) => {
+       const indexToRemove = function1.findIndex((item => item.id === id))
+    setFunction1((prev)=>prev.filter((_,index)=>index !== indexToRemove))
+    setFunction2((prev)=>prev.filter((_,index)=>index !== indexToRemove))
+  };
+  const handleRemoveItem3 = (function1,setFunction1,setFunction2,setFunction3, id) => {
+    const indexToRemove = function1.findIndex((item => item.id === id))
+ 
+ setFunction1((prev)=>prev.filter((_,index)=>index !== indexToRemove))
+ setFunction2((prev)=>prev.filter((_,index)=>index !== indexToRemove))
+ setFunction3((prev)=>prev.filter((_,index)=>index !== indexToRemove))
+
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -257,30 +331,66 @@ const AddMovie = () => {
 
     const formData = new FormData();
     formData.append('name', movieName);
+
     formData.append('movieImage', movieImage);
     formData.append('movieTrailer', movieTrailer);
     formData.append('PosterUrl', posterUrl);
+    formData.append('category',category);
     formData.append('certificate', certificate);
     formData.append('releaseDate', releaseDate);
     formData.append('runtime', runtime);
     formData.append('imdbRating', imdbRating);
     formData.append('description', description);
+
     formData.append('stars', JSON.stringify(stars));
-    formData.append('Director', JSON.stringify(directorDetails));
-    formData.append('musicDirector', JSON.stringify(musicDirectorDetails));
+    
+    StarImageArray.forEach((file)=>{
+      formData.append('StarImage',file)
+    })
+
+    formData.append('directors', JSON.stringify(directorDetails));
+    directorImageArray.forEach((file)=>{
+      formData.append('DirectorImage',file)
+    })
+
+    formData.append('musicDirectors', JSON.stringify(musicDirectorDetails));
+    musicdirectorImageArray.forEach((file)=>{
+      formData.append('MusicDirectorImage',file)
+    })
+
     formData.append('writer', JSON.stringify(writerDetails));
     formData.append('genre', JSON.stringify(genre));
     formData.append('language', JSON.stringify(languageDetails));
+
     formData.append('OTTPlatform', JSON.stringify(OTTplatform));
+    OTTPlatformImageArray.forEach((file)=>{
+      formData.append('OTTplatformImage',file)
+    })
     formData.append('relatedVideo', JSON.stringify(relatedVideo));
+    
+    videoArray.forEach((file)=>{
+      formData.append('Video',file)
+    })
+    ThumbnailArray.forEach((file)=>{
+      formData.append('Thumbnail',file)
+    })
+
     
     try {
         const jwtToken = Cookies.get('jwt_Admin_Token');
+       
+
+     
   
         if (!jwtToken) {
             alert('Authentication token not found. Please log in again.');
             return;
         }
+       const filteredMovies = AllMovies.filter(movie => movie.name === movieName);
+       if (filteredMovies.length>0){
+        alert('Movie Already present Try Another Movie !!!');
+            return;
+       }
 
         const response = await axios.post('http://localhost:5001/admin/upload', formData, {
             headers: {
@@ -288,9 +398,9 @@ const AddMovie = () => {
                 'Authorization': `Bearer ${jwtToken}`,
             },
         });
-
         console.log(response.data);
         alert('Movie and related videos added successfully');
+        window.location.href = '/add-movie'; 
     } catch (error) {
         console.error('Error uploading the movie:', error);
         alert('An error occurred while uploading the movie. Please try again.');
@@ -345,6 +455,7 @@ const AddMovie = () => {
             </label>
             <input
               type="date"
+              value={releaseDate}
               id="releaseDate"
               className="w-36 rounded-sm text-black ring-2 ring-sky-400"
               onChange={(e) => setReleaseDate(e.target.value)}
@@ -418,6 +529,24 @@ const AddMovie = () => {
             </div>
           ))}
         </div>
+        <label className="text-cyan-400" htmlFor="category">
+          CATEGORY
+        </label>
+        <div className="flex justify-center items-center space-x-4">
+          {["BlockBuster", "Average", "Hit", "Not yet"].map((cat)=> (
+            <div key={cat}>
+              <input
+                type="radio"
+                name="category"
+                id={cat}
+                value={cat}
+                checked={category === cat}
+                onChange={handleCategoryChange}
+              />
+              <label htmlFor={cat}>{cat}</label>
+            </div>
+          ))}
+        </div>
         <div className="flex flex-col gap-2 justify-center items-center border-2 border-white p-2 ">
         <h2 className="text-cyan-400">Star Details</h2>
         <input
@@ -454,7 +583,7 @@ const AddMovie = () => {
              
               <button
                 className="text-red-500"
-                onClick={() => handleRemoveItem(setStars, star.id)}
+                onClick={() => handleRemoveItem2(stars,setStarImageArray,setStars, star.id)}
               >
                 <IoCloseCircleOutline size={24} />
               </button>
@@ -499,7 +628,7 @@ const AddMovie = () => {
              
               <button
                 className="text-red-500"
-                onClick={() => handleRemoveItem(setDirectorDetails, director.id)}
+                onClick={() => handleRemoveItem2(directorDetails,setDirectorImageArray, setDirectorDetails, director.id)}
               >
                 <IoCloseCircleOutline size={24} />
               </button>
@@ -545,7 +674,7 @@ const AddMovie = () => {
              
               <button
                 className="text-red-500"
-                onClick={() => handleRemoveItem(setMusicDirectorDetails, director.id)}
+                onClick={() => handleRemoveItem2(musicDirectorDetails,setMusicDirectorImageArray ,setMusicDirectorDetails, director.id)}
               >
                 <IoCloseCircleOutline size={24} />
               </button>
@@ -573,10 +702,10 @@ const AddMovie = () => {
         <div className="w-full px-5 flex gap-2 overflow-x-auto" style={{scrollbarWidth:"none"}}>
           {writerDetails.map((writer) => (
             <div key={writer.id} className="flex justify-between items-center">
-              <p>{writer.writer}</p>
+              <p>{writer.name}</p>
               <button
                 className="text-red-500"
-                onClick={() => handleRemoveItem(setwriterDetails, writer.id)}
+                onClick={() => handleRemoveItem1(setwriterDetails, writer.id)}
               >
                 <IoCloseCircleOutline size={24} />
               </button>
@@ -606,7 +735,7 @@ const AddMovie = () => {
               <p>{gen.type}</p>
               <button
                 className="text-red-500"
-                onClick={() => handleRemoveItem(setGenre, gen.id)}
+                onClick={() => handleRemoveItem1(setGenre, gen.id)}
               >
                 <IoCloseCircleOutline size={24} />
               </button>
@@ -649,7 +778,7 @@ const AddMovie = () => {
               <p>{`${language.language} (${language.category})`}</p>
               <button
                 className="text-red-500"
-                onClick={() => handleRemoveItem(setLanguageDetails, language.id)}
+                onClick={() => handleRemoveItem1(setLanguageDetails, language.id)}
               >
                 <IoCloseCircleOutline size={24} />
               </button>
@@ -705,7 +834,7 @@ const AddMovie = () => {
              
               <button
                 className="text-red-500"
-                onClick={() => handleRemoveItem(setOTTplatform, OTT.id)}
+                onClick={() => handleRemoveItem2(OTTplatform,setOttplatformImageArray, setOTTplatform, OTT.id)}
               >
                 <IoCloseCircleOutline size={24} />
               </button>
@@ -762,7 +891,7 @@ const AddMovie = () => {
       
             <button
               className="text-red-500 absolute top-0 right-0"
-              onClick={() => handleRemoveItem(setrelatedVideo, video.id)}
+              onClick={() => handleRemoveItem3(relatedVideo,setvideoArray,setThumbnailArray,setrelatedVideo, video.id)}
             >
               <IoCloseCircleOutline size={24} />
             </button>

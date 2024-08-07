@@ -18,7 +18,7 @@ function Popular() {
   }, []);
 
   const fetchData = async () => {
-    const url = 'http://localhost:5001/';
+    const url = 'http://localhost:5001/user/';
     const jwtToken = Cookies.get('jwt_Token');
     const options = {
       method: 'GET',

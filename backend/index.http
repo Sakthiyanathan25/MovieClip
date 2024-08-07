@@ -9,23 +9,24 @@ Content-Type: application/json
 }
 
 ###
-POST  http://localhost:5001/login/
+POST  http://localhost:5001/user/login/
 Content-Type: application/json
 
 {
-  "username": "Pon",
+  "username": "sakthi",
   "password": "123456"
 }
 ###
 
-GET http://localhost:5001/user/
+GET http://localhost:5001/user/movies/1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlBvbiIsImlhdCI6MTcxMjQ4MDQwMn0.xXr1FGXkQugr2OpAKNlNqSXfOIFyrca5gZQ7dQ_7EOU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNha3RoaSIsImlhdCI6MTcyMjYwMjMwNH0.mGU1wDdxzfcJKJcjrq1plra02O7OvrySFTxuzoLXmrw
 
 
 ###
-GET  http://localhost:5001/admin-login/
+POST http://localhost:5001/admin/admin-login/
 Content-Type: application/json
+
 {
   "adminname": "nato",
   "password": "1234567890"

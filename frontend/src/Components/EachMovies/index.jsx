@@ -38,7 +38,7 @@ class EachMovies extends Component{
         const {id}=this.props.match.params
        
         try {
-          const url = `http://localhost:5001/movies/${id}`;
+          const url = `http://localhost:5001/user/movies/${id}`;
           const jwtToken = Cookies.get('jwt_Token');
           const options = {
             method: "GET",
@@ -73,10 +73,10 @@ class EachMovies extends Component{
           
               const GenreType = data.genre.map(each=>each.type)
               const dubbedLanguages= data.language
-              .filter(each => each.category !== "Orginal")
+              .filter(each => each.category !== "Original")
               .map(each => each.language);
               
-              const OrginalLanguage=data.language.filter(each=>each.category === "Orginal").map(each=>each.language)
+              const OrginalLanguage=data.language.filter(each=>each.category === "Original").map(each=>each.language)
               console.log(OrginalLanguage)
                           
             this.setState({ movieDetails: movieresult[0],
@@ -109,7 +109,7 @@ class EachMovies extends Component{
         const {movieId}=this.state.movieDetails
         try {
           const jwtToken = Cookies.get("jwt_Token");
-          const url = `http://localhost:5001/movies/${movieId}/likes`;
+          const url = `http://localhost:5001/user/movies/${movieId}/likes`;
           const options = {
             method: "POST",
             headers: {
@@ -140,7 +140,7 @@ class EachMovies extends Component{
         const {movieId}=this.state.movieDetails
         try {
           const jwtToken = Cookies.get("jwt_Token");
-          const url = `http://localhost:5001/movies/${movieId}/watchlist`;
+          const url = `http://localhost:5001/user/movies/${movieId}/watchlist`;
           const options = {
             method: "POST",
             headers: {

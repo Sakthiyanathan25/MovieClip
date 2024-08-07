@@ -41,7 +41,7 @@ const SimpleSlider = ({ List }) => {
     <div className=" relative">
       <Slider {...settings} >
         {List.map((eachMovie) => (
-          <Link to={`/movies/${eachMovie.movieId}`} key={eachMovie.movieId} >
+          <Link to={`movies/${eachMovie.movieId}`} key={eachMovie.movieId} >
             <img
               className="images"
               src={eachMovie.imageUrl}

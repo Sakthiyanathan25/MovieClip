@@ -8,6 +8,8 @@ class AdminSite extends Component {
   state = {
     movies: [],
     searchInput: "",
+    totalusers:0,
+    admin:""
   };
 
   componentDidMount() {
@@ -20,7 +22,7 @@ class AdminSite extends Component {
   }
   fetchData = async () => {
     const { searchInput } = this.state;
-    const url = `http://localhost:5001/admin?search_q=${searchInput}`;
+    const url = `http://localhost:5001/admin/allmovies?search_q=${searchInput}`;
     const jwtToken = Cookies.get('jwt_Admin_Token');
     const options = {
       method: "GET",
@@ -38,15 +40,16 @@ class AdminSite extends Component {
         imageUrl: eachMovie.image_url,
         language: eachMovie.language,
         name: eachMovie.name,
+        
       }));
-      this.setState({ movies: updatedMovies });
+      this.setState({ movies: updatedMovies,admin:data.admin,totalusers:data.totalusers });
     } else {
       console.error(data.errMsg);
     }
   };
 
   deleteMovie = async (id) => {
-    const url = `http://localhost:5001/admin/${id}`;
+    const url = `http://localhost:5001/admin/delete/${id} `;
     const jwtToken = Cookies.get('jwt_Admin_Token');
     const options = {
       method: "DELETE",
@@ -58,7 +61,8 @@ class AdminSite extends Component {
 
     const response = await fetch(url, options);
     if (response.ok) {
-      this.fetchData(); // Re-fetch data to update the list
+      alert("Movie Deleted Succeffully")
+      await this.fetchData(); // Re-fetch data to update the list
     } else {
       console.error('Failed to delete movie');
     }
@@ -81,6 +85,20 @@ class AdminSite extends Component {
     return (
       <>  <AdminHeader/>
       <div className=" flex flex-col text-center mt-20 p-10 bg-slate-900  text-white">
+            <div className="flex flex-wrap gap-10 justify-center items-center">
+            <div className="bg-green-300 w-52 py-10 rounded-lg">
+              <h1 className=" font-time py-2 text-xl ">TOTAL USERS</h1>
+              <p className=" text-2xl font-time text-green-700 ">{this.state.totalusers}</p>
+
+              
+            </div>
+            <div className="bg-red-300 w-52 py-10 rounded-lg">
+              <h1 className=" font-time py-2 text-xl">ADMIN</h1>
+              <p className=" text-2xl font-time text-red-700">{this.state.admin}</p>
+              
+            </div>
+            </div>
+           
 
         <h1 className="text-left font-time py-10 text-5xl">All Movies</h1>
 
@@ -115,18 +133,24 @@ class AdminSite extends Component {
                     >
                       Delete
                     </button>
-                    <button className="bg-zinc-900 ring-2 ring-white py-3 w-full" type="button">
-                      Update
-                    </button>
+                    
+                     <button className="bg-zinc-900 ring-2 hidden ring-white py-3 w-full" type="button">
+                     Update
+                   </button>
+                   
                   </div>
                 </li>
               ))}
+             <Link to="/add-movie">
               <div className="flex flex-col gap-2">
+                
                 <div className="ring-2 ring-white w-48 bg-white/25 h-72">
                   <FaPlus size={60} className="text-white/65 mx-auto mt-32" />
                 </div>
                 <p className="bg-green-700 ring-2 ring-white py-3 w-full">Add Movie</p>
+               
               </div>
+              </Link>
             </ul>
           </div>
         </div>

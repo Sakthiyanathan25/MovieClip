@@ -33,7 +33,7 @@ function App() {
       <ProtectedAdmin exact path="/admin-register" component={AdminRegister}/>
       <ProtectedAdmin exact path="/add-movie" component={AddMovie}/>
       <Route  path="/not-found" component={NotFound} />
-      <Redirect to="/not-found" />
+      <Redirect to="/not-found " />
     </Switch>
     </>
    

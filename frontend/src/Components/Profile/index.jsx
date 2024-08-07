@@ -12,7 +12,7 @@ function Profile() {
     fetchData();
   }, []);
   const fetchData = async () => {
-    const url = "http://localhost:5001/user";
+    const url = "http://localhost:5001/user/userDetails";
     const jwtToken = Cookies.get('jwt_Token');
     const options = { 
       method: "GET",
